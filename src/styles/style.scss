@@ -1,0 +1,80 @@
+@import "./mcms";
+
+@import "modules/variables";
+@import "modules/base";
+@import "modules/themes";
+@import "./comp.scss";
+
+// Main styles
+
+.main-container {
+  height: 100vh;
+}
+
+/* Tab text */
+.tab-text-container p {
+  color: #929298;
+}
+p.gray,
+h1.gray,
+.gray {
+  color: #929298;
+}
+
+header {
+  height: 100px;
+  min-height: 100px;
+  pointer-events: none;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1001;
+
+  & > * {
+    pointer-events: all;
+  }
+
+  .menu a {
+    margin-left: 2rem;
+  }
+  .logo a img {
+    width: 32px;
+  }
+  a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .product {
+    padding: 2rem;
+    width: 100%;
+    border-radius: 1.5rem;
+    & > * { margin: 0; }
+  }
+}
+@media (min-width: 700px) {
+  .product-container .product { width: calc(50% - 1.5rem); }
+}
+
+@media (min-width: 1000px) {
+  .product-container .product { width: calc(33% - 1rem); }
+}
+/*
+<div className="product-container">
+          <div className="product">
+            <h2>TAIMOÄN ANIMAL | niksleh</h2>
+            <h1 style="font-weight: 200;">53€</h1>
+            <h5>Colors: white</h5>
+            <div className="availability"></div>
+          </div>
+        </div>
+*/

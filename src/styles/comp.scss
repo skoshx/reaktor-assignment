@@ -1,0 +1,303 @@
+// Components
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+body {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--theme-color);
+}
+a:hover {
+  color: var(--theme-color);
+}
+
+/* Selection */
+::-moz-selection {
+  background: var(--theme-color);
+  color: #f6f4f2;
+}
+
+::selection {
+  background: var(--theme-color);
+  color: #f6f4f2;
+}
+
+/* Headers */
+
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h1.title {
+  /* font-size: 64px; */
+  // font-size: 12.8rem;
+  font-size: 6.8rem;
+  // font-size: 128px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  margin-bottom: 0;
+}
+
+h1,
+h2 {
+  font-weight: 600;
+}
+
+h2.subtitle {
+  opacity: 0.7;
+  /* font-size: 24px; */
+  // font-size: 48px;
+  // font-size: 4.8rem;
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+/* Container */
+
+.container-wrapper {
+  // padding-top: 112px;
+  // padding-bottom: 112px;
+  padding-bottom: 11.2rem;
+  position: relative;
+  /* padding: 112px 96px; */
+}
+
+/* Button */
+
+a.button,
+.button {
+  display: inline-flex;
+  border-radius: 30px;
+  padding: 15px 30px;
+  /* background: var(--secondary-color); */
+  background: transparent;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.button span {
+  // font-size: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 0.7;
+  letter-spacing: 0.125em;
+  color: #fff;
+  user-select: none;
+  // pointer-events: none;
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+}
+
+/* Inputs */
+
+.group {
+  position: relative;
+  margin-bottom: 45px;
+}
+
+input,
+textarea {
+  resize: none;
+  background: transparent;
+  width: 100%;
+  // font-size: 18px;
+  font-size: 1.8rem;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  /* width: 300px; */
+  border: none;
+  color: var(--secondary-color);
+  // border-bottom: 2px solid rgba(246, 244, 242, 0.7);
+  border-bottom: 2px solid var(--transparent-secondary);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+label {
+  /* color: #999; */
+  // color: rgba(246, 244, 242, 0.7);
+  color: var(--transparent-secondary);
+  // font-size: 18px;
+  font-size: 1.8rem;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+/* active state */
+input:focus ~ label,
+input:valid ~ label,
+textarea:focus ~ label,
+textarea:valid ~ label {
+  top: -10px;
+  font-size: 14px;
+  /* color:#5264AE; */
+  color: var(--secondary-color);
+}
+
+.bar {
+  position: relative;
+  display: block;
+}
+
+.bar:before,
+.bar:after {
+  content: "";
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  /* background: #5264AE; */
+  background: var(--secondary-color);
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.bar:before {
+  left: 50%;
+}
+
+.bar:after {
+  right: 50%;
+}
+
+/* active state */
+input:focus ~ .bar:before,
+input:focus ~ .bar:after,
+textarea:focus ~ .bar:before,
+textarea:focus ~ .bar:after {
+  width: 50%;
+}
+
+/* Spacings */
+
+.spacing > * {
+  margin-bottom: 15px;
+}
+
+.spacing-30 > * {
+  margin-bottom: 30px;
+}
+
+.spacing-60 > * {
+  margin-bottom: 60px;
+}
+
+.spacing > *:last-child,
+.spacing-30 > *:last-child,
+.spacing-60 > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Foreground */
+
+.foreground {
+  z-index: 1001;
+}
+
+/* Simple grid */
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row > * {
+  width: 100%;
+}
+
+/* Anchors */
+a.slide {
+  color: var(--secondary-color);
+
+  &:hover {
+    color: var(--secondary-color);
+    text-decoration: none;
+  }
+  &::after {
+    color: var(--secondary-color);
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--secondary-color);
+    transition: width ease-in-out 0.2s;
+  }
+  &:hover::after {
+    color: var(--secondary-color);
+    text-decoration: none;
+    border-bottom: 1px solid;
+    width: 100%;
+  }
+}
+
+/* Tab Switcher */
+
+.tab-switcher {
+  height: 48px;
+  min-height: 48px; // For some reason, height property isn't enough on Safari... smh.
+  background: #201f20;
+  border-radius: 999px;
+  padding: 5px;
+  color: #98979d;
+  font-size: 2rem;
+  font-weight: 500;
+  display: inline-flex;
+  text-align: center;
+  position: relative;
+  user-select: none;
+  z-index: 1;
+  .tab {
+    transition: color 0.3s ease-out;
+    &.background-pill {
+      background: var(--theme-color);
+      height: calc(100% - 10px);
+      width: 100px;
+      position: absolute;
+      z-index: 0;
+    }
+    &.active {
+      color: #fff;
+    }
+    z-index: 1;
+    border-radius: 999px;
+    padding: 3px 17px;
+    cursor: pointer;
+  }
+}

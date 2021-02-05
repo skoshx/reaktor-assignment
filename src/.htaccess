@@ -1,0 +1,33 @@
+#
+# MCMS - Modern CMS
+# 
+# Apache rewrite rules for MCMS
+#
+
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  # Rewrites for website
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+
+  # Rewrite for www->non-www
+  RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+  # Protect files
+  <Files "assets.json">
+    Order Allow,Deny
+    Deny from all
+  </Files>
+  <FilesMatch "\.(htaccess|sql)$">
+    Order Allow,Deny
+    Deny from all
+  </FilesMatch>
+
+  # Disable directory browsing
+  Options All -Indexes
+</IfModule>

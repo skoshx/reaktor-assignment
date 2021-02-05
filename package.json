@@ -1,0 +1,58 @@
+{
+  "name": "reaktor-assignment",
+  "version": "1.0.0",
+  "description": "My take on the Bad API Reaktor assignment",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "dev-server": "parcel build src/server/index.ts --target node --out-dir dist/server && node dist/server/index.js",
+    "build": "parcel build src/index.html --no-source-maps --public-url / && cp src/.htaccess dist",
+    "build:kaios": "parcel build src/index_kaios.html --no-source-maps --public-url / && cp src/.htaccess dist",
+    "build:test": "parcel build test/*.ts --out-dir _tests",
+    "build:proxy": "parcel build src/proxy/proxy.ts --target node --out-dir dist/proxy",
+    "fullbuild": "yarn gulp prebuild && yarn run format && yarn run check-types && yarn run test && yarn run build && yarn gulp postbuild",
+    "test": "yarn run build:test && ava",
+    "coverage": "yarn nyc ava",
+    "format": "prettier --write .",
+    "check-types": "tsc --noEmit --skipLibCheck"
+  },
+  "ava": {
+    "files": [
+      "_tests/**/*"
+    ],
+    "verbose": true,
+    "require": [
+      "./test/_setupBrowser.js"
+    ]
+  },
+  "browserslist": [
+    "last 2 Chrome versions"
+  ],
+  "author": "skoshx",
+  "license": "MIT",
+  "dependencies": {
+    "@ava/typescript": "^1.1.1",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.10.1",
+    "autoprefixer": "^8.6.0",
+    "ava": "^3.7.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "browser-env": "^3.3.0",
+    "del": "^5.1.0",
+    "express": "^4.17.1",
+    "got": "^11.8.1",
+    "gulp": "^4.0.2",
+    "ky": "^0.26.0",
+    "node-sass": "^4.11.0",
+    "nyc": "^15.0.1",
+    "parcel": "^1.12.4",
+    "parcel-bundler": "^1.12.4",
+    "preact": "^10.4.4",
+    "preact-router": "^3.2.1",
+    "prettier": "^2.0.2",
+    "typescript": "^3.0.1",
+    "wobble": "^1.5.1"
+  }
+}
