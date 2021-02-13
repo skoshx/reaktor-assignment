@@ -4,13 +4,10 @@
   "description": "My take on the Bad API Reaktor assignment",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html --no-source-maps --public-url / && cp src/.htaccess dist",
-    "build:test": "parcel build test/*.ts --out-dir _tests",
+    "build": "parcel build src/index.html --out-dir dist/web",
     "build:proxy": "parcel build src/proxy/proxy.ts --target node --out-dir dist/proxy",
-    "test": "yarn run build:test && ava",
-    "coverage": "yarn nyc ava",
     "format": "prettier --write .",
-    "check-types": "tsc --noEmit --skipLibCheck"
+    "start": "node express/server.js"
   },
   "browserslist": [
     "last 2 Chrome versions"
