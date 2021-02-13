@@ -16,6 +16,7 @@ import { capitalize } from "../util";
 
 export interface TabSwitcherProps {
   tabs: string[];
+  active: number;
   styles?: string | { [key: string]: string | number };
   onChange?: (tab: number) => void;
 }
@@ -23,7 +24,7 @@ export interface TabSwitcherProps {
 export const TabSwitcher = (props: TabSwitcherProps) => {
   const pill = useRef(null);
   const tabSwitcherElement = useRef(null);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(props.active);
 
   const tabs = props.tabs.map((item: string, index: number) => {
     return (
@@ -65,33 +66,6 @@ export const TabSwitcher = (props: TabSwitcherProps) => {
     <div className="tab-switcher" ref={tabSwitcherElement} style={props.styles}>
       <div className="background-pill tab" ref={pill}></div>
       {...tabs}
-    </div>
-  );
-};
-
-export const FadeAnimation = ({
-  children,
-  className,
-}: {
-  children?: ComponentChildren;
-  className?: string;
-}) => {
-  const [opacity, setOpacity] = useState<number>(0);
-  const fadeDescription = { from: 0, to: 1 };
-  const OpacitySetter: SetterFunction = (
-    element: HTMLElement,
-    spring: Spring
-  ) => {
-    setOpacity(spring.currentValue);
-  };
-  useEffect(() => {
-    (async () => {
-      await animation(fadeDescription, null, OpacitySetter);
-    })();
-  }, []);
-  return (
-    <div className={className} style={{ opacity: opacity }}>
-      {children}
     </div>
   );
 };

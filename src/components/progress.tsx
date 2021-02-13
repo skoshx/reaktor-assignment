@@ -14,18 +14,17 @@ export enum ProgressEvents {
   Finished = "PROGRESS_EVENT_FINISHED",
 };
 
-const PROGRESS_COLOR = "var(--theme-color)";
+// const PROGRESS_COLOR = "var(--theme-color)";
 
 export const Progress = () => {
   const progressRef = useRef<HTMLDivElement>();
   const [progressEvent, setProgressEvent] = useState<ProgressEvents>(null);
   const [progress, setProgress] = useState(0);
-  let bumpInterval: number = null;
 
   useEffect(() => {
     // Set color
-    progressRef.current.style.background = PROGRESS_COLOR;
-    progressRef.current.style.color = PROGRESS_COLOR;
+    //progressRef.current.style.background = PROGRESS_COLOR;
+    //progressRef.current.style.color = PROGRESS_COLOR;
     // Animate according to progress
     const width = parseFloat(progressRef.current.style.width);
     fadeIn(progressRef.current);
@@ -61,7 +60,11 @@ export const Progress = () => {
       ref={progressRef}
       id="progress"
       className="u-shadow"
-      style="position: fixed; top: 0; left: 0; height: 4px; width: 0%;"
+      style="position: fixed; top: 0; left: 0; height: 4px; width: 0%; background: var(--theme-color);"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow={Math.round(progress * 100)}
     >
     </div>
   );

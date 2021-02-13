@@ -100,11 +100,10 @@ export async function getAvailabilityById(manufacturer: string, id: string, erro
   const api = getApi(errorMode);
   try {
     EventEmitter.emit(ProgressEvents.Progress, 0.3);
-    console.log("emitting");
     const response: AvailabilityResponse = await api.get(endpoint).json();
     EventEmitter.emit(ProgressEvents.Finished);
     const results = response.response;
-    console.log(id);
+    if (typeof results === "string") return "notfound"; // Handle error case
     for (let i = 0; i < results.length; i++) {
       if (results[i].id.toLowerCase() == id) {
         const parser = new DOMParser();

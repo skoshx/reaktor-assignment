@@ -5,17 +5,17 @@
 
 import { h } from "preact";
 
-import logo from "../public/images/icons/droplet.svg";
-
 export const Header = () => {
   const logoStyle = {
     fontSize: "20px",
+    color: "var(--theme-color)",
+    textAlign: 'center'
   };
   return (
     <header>
-      <div className="logo">
+      <div className="logo" style="width: 100%;">
         <a href="/">
-          <img src={logo} alt="Logo" style={{ marginBottom: "-10px" }} />
+          <h5 style={logoStyle}>Reaktor Bad API Assignment</h5>
         </a>
       </div>
     </header>

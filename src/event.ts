@@ -3,10 +3,10 @@
  * A basic event emitter
  */
 
-import { IndexableObject } from "./util";
+import { IndexableTemplateObject } from "./util";
 
 interface EventEmitterType {
-  events: IndexableObject;
+  events: IndexableTemplateObject<any>;
   on: (name: string, listener: Function) => void;
   removeListener: (name: string, listenerToRemove: Function) => void;
   emit: (name: string, ...args: any[]) => void;
