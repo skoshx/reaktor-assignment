@@ -14,19 +14,13 @@ export enum ProgressEvents {
   Finished = "PROGRESS_EVENT_FINISHED",
 };
 
-// const PROGRESS_COLOR = "var(--theme-color)";
-
 export const Progress = () => {
   const progressRef = useRef<HTMLDivElement>();
-  const [progressEvent, setProgressEvent] = useState<ProgressEvents>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Set color
-    //progressRef.current.style.background = PROGRESS_COLOR;
-    //progressRef.current.style.color = PROGRESS_COLOR;
     // Animate according to progress
-    const width = parseFloat(progressRef.current.style.width);
+    const width = parseFloat(getComputedStyle(progressRef.current).width);
     fadeIn(progressRef.current);
     animation(
       { from: width, to: progress * 100 },
@@ -41,18 +35,16 @@ export const Progress = () => {
     setProgress(progress);
   });
 
-  EventEmitter.on(ProgressEvents.Finished, () => {
-    (async () => {
-      const width = parseFloat(progressRef.current.style.width);
-      await animation(
-        { from: width, to: 100 },
-        progressRef.current,
-        PropertySetter("width", "%")
-      );
-      await fadeOut(progressRef.current);
-      progressRef.current.style.width = '0';
-      setProgress(0); // Reset progress
-    })();
+  EventEmitter.on(ProgressEvents.Finished, async () => {
+    const width = parseFloat(progressRef.current.style.width);
+    await animation(
+      { from: width, to: 100 },
+      progressRef.current,
+      PropertySetter("width", "%")
+    );
+    await fadeOut(progressRef.current);
+    progressRef.current.style.width = '0';
+    setProgress(0); // Reset progress
   });
 
   return (
@@ -60,7 +52,6 @@ export const Progress = () => {
       ref={progressRef}
       id="progress"
       className="u-shadow"
-      style="position: fixed; top: 0; left: 0; height: 4px; width: 0%; background: var(--theme-color);"
       role="progressbar"
       aria-valuemin="0"
       aria-valuemax="100"

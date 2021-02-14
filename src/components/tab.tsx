@@ -3,15 +3,13 @@
  * Tab component
  */
 
-import { h, ComponentChildren } from "preact";
+import { h } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import {
   animation,
   SpringTypes,
-  PropertySetter,
-  SetterFunction
+  PropertySetter
 } from "../animation";
-import { Spring } from "wobble";
 import { capitalize } from "../util";
 
 export interface TabSwitcherProps {
@@ -68,23 +66,4 @@ export const TabSwitcher = (props: TabSwitcherProps) => {
       {...tabs}
     </div>
   );
-};
-
-export const Tab = (props: { tab: number; children: ComponentChildren[] }) => {
-  const tabRef = useRef(null);
-  useEffect(() => {
-    // Fade out, then fade in
-    // const desc = { from: 0, to: tabRef.current.scrollHeight };
-    // collapse(tabRef.current);
-    // expand(tabRef.current);
-    /*animation(desc, tabRef.current, (el: HTMLElement, s: Spring) => {
-      el.style.height = s.currentValue + 'px';
-    });*/
-  }, [props.tab]);
-  return (
-    <div style="width: 100%; height: 100%;" ref={tabRef}>
-      {props.children[props.tab]}
-    </div>
-  );
-  // return props.children[props.tab];
 };

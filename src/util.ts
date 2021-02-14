@@ -7,11 +7,7 @@ import { getAvailabilityEndpoint, getProductsEndpoint } from "./config";
 import { EventEmitter } from "./event";
 import ky from 'ky';
 import { Logger, LogLevels } from "./logger";
-import { report } from "process";
-import { availabilityResponse, productResponse } from "./mock";
-import { markAsUntransferable } from "worker_threads";
 import { ProgressEvents } from "./components/progress";
-import { TimeoutError } from "got/dist/source/core/utils/timed-out";
 
 /**
  * Returns the saved value of a cookie, or null if not set
@@ -74,6 +70,7 @@ export async function getProducts(category: string, errorMode?: boolean): Promis
   const api = getApi(errorMode);
   try {
     EventEmitter.emit(ProgressEvents.Progress, 0.3);
+    console.log("Fetching endpoint", endpoint);
     const response = await api.get(endpoint).json() as Product[];
     EventEmitter.emit(ProgressEvents.Finished);
     return response;
