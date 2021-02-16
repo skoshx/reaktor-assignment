@@ -9,10 +9,10 @@ import Router from "preact-router";
 import "./styles/style.scss";
 
 import { Header } from "./components/header";
-import { TabSwitcher, Tab } from "./components/tab";
+import { TabSwitcher } from "./components/tab";
 import { Product, getProducts, TAvailability, getAvailabilityById, IndexableTemplateObject } from "./util";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { collapse, expand, fadeIn, fadeOut } from "./animation";
+import { expand, fadeIn, fadeOut } from "./animation";
 import { Progress } from "./components/progress";
 import { EventEmitter } from "./event";
 

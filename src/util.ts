@@ -9,35 +9,6 @@ import ky from 'ky';
 import { Logger, LogLevels } from "./logger";
 import { ProgressEvents } from "./components/progress";
 
-/**
- * Returns the saved value of a cookie, or null if not set
- * @param {string} name Name of the cookie
- */
-export function getCookie(name: string) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-export function setCookie(name: string, value: string, days: number) {
-  var expires = "";
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + date.toUTCString();
-  }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
-
-export const isTouchDevice = () => {
-  return "ontouchstart" in window;
-};
-
 export interface IndexableTemplateObject<T> {
   [key: string]: T;
 }
@@ -47,14 +18,6 @@ export function capitalize(s: string) {
 }
 
 // API requests
-
-export function parseJSON(json: string): any | null {
-  try {
-    return JSON.parse(json);
-  } catch (e) {
-    return null;
-  }
-}
 
 export interface Product {
   id: string;
@@ -70,11 +33,9 @@ export async function getProducts(category: string, errorMode?: boolean): Promis
   const api = getApi(errorMode);
   try {
     EventEmitter.emit(ProgressEvents.Progress, 0.3);
-    console.log("Fetching endpoint", endpoint);
     const response = await api.get(endpoint).json() as Product[];
     EventEmitter.emit(ProgressEvents.Finished);
     return response;
-    // return await api.get(endpoint).json() as Product[];
   } catch (e: any) {
     Logger.log(e, LogLevels.Error);
     EventEmitter.emit(ProgressEvents.Finished);
@@ -92,6 +53,7 @@ export interface AvailabilityResponse {
 }
 
 export type TAvailability = "instock" | "outofstock" | "lessthan10" | "notfound";
+
 export async function getAvailabilityById(manufacturer: string, id: string, errorMode?: boolean): Promise<TAvailability> {
   const endpoint = getAvailabilityEndpoint(manufacturer);
   const api = getApi(errorMode);
@@ -103,7 +65,7 @@ export async function getAvailabilityById(manufacturer: string, id: string, erro
     if (typeof results === "string") return "notfound"; // Handle error case
     for (let i = 0; i < results.length; i++) {
       if (results[i].id.toLowerCase() == id) {
-        const parser = new DOMParser();
+        const parser = new DOMParser(); // Parse response
         const xml = parser.parseFromString(results[i].DATAPAYLOAD, "text/xml");
         const availability = xml.getElementsByTagName("INSTOCKVALUE")[0].textContent.toLowerCase() as TAvailability;
         return availability;

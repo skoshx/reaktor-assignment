@@ -26,17 +26,7 @@ export const SpringTypes = {
     mass: 1,
     stiffness: 200,
     damping: 100,
-  },
-  EXTRA_SLOWED: {
-    mass: 1,
-    stiffness: 100,
-    damping: 100,
-  },
-  SUPER_SLOWED: {
-    mass: 1,
-    stiffness: 10,
-    damping: 100,
-  },
+  }
 };
 
 export interface AnimationDescription {
@@ -45,36 +35,6 @@ export interface AnimationDescription {
 }
 
 export type SetterFunction = (element: HTMLElement, spring: Spring) => void;
-export type PureSpringCallback = (spring: Spring) => void;
-
-export function pureSpring(
-  description: AnimationDescription,
-  callback: PureSpringCallback,
-  config?: PartialSpringConfig,
-  type?: SpringType
-): Promise<void> {
-  return new Promise(async (resolve) => {
-    const defaults = {
-      stiffness: 1000,
-      damping: 500,
-      mass: 3,
-      fromValue: description.from,
-      toValue: description.to,
-    };
-    config = { ...defaults, ...config, ...type };
-    const spring = new Spring(config);
-    // Listeners
-    spring
-      .onStart(() => {})
-      .onUpdate((s) => {
-        callback(s);
-      })
-      .onStop(() => {
-        resolve();
-      })
-      .start();
-  });
-}
 
 export function animation(
   description: AnimationDescription,
@@ -92,7 +52,8 @@ export function animation(
       toValue: description.to,
     };
     config = { ...defaults, ...config, ...type };
-    if (config.fromValue === config.toValue) resolve(); // Resolve if there is nothing to animate
+    // Resolve if there is nothing to animate
+    if (config.fromValue === config.toValue) resolve();
 
     const spring = new Spring(config);
     // Listeners
@@ -105,36 +66,6 @@ export function animation(
         resolve();
       })
       .start();
-  });
-}
-
-export function springScrollTo(
-  element: HTMLElement,
-  target: HTMLElement,
-  config?: PartialSpringConfig,
-  type?: SpringType
-): Promise<void> {
-  return new Promise(async (resolve) => {
-    const desc: AnimationDescription = {
-      from: element.scrollTop,
-      to: target.getBoundingClientRect().top + element.scrollTop,
-    };
-    await animation(desc, element, ScrollSetter, config, type);
-    resolve();
-  });
-}
-
-export function scrollTop(
-  element: HTMLElement,
-  config?: PartialSpringConfig
-): Promise<void> {
-  return new Promise(async (resolve) => {
-    const desc: AnimationDescription = {
-      from: element.scrollTop,
-      to: 0,
-    };
-    await animation(desc, element, ScrollSetter, config, SpringTypes.DEFAULT);
-    resolve();
   });
 }
 
@@ -153,53 +84,6 @@ export function expand(
       config,
       type
     );
-    resolve();
-  });
-}
-
-export function collapse(
-  element: HTMLElement,
-  config?: PartialSpringConfig,
-  type?: SpringType
-): Promise<void> {
-  return new Promise(async (resolve) => {
-    // Set overflow hidden
-    element.style.overflow = "hidden";
-
-    const height: number = element.getBoundingClientRect().height;
-    const paddingTop: number = parseInt(getComputedStyle(element).paddingTop);
-    const paddingBottom: number = parseInt(
-      getComputedStyle(element).paddingBottom
-    );
-    const heightAnimation: AnimationDescription = { from: height, to: 0 };
-    const topAnimation: AnimationDescription = { from: paddingTop, to: 0 };
-    const bottomAnimation: AnimationDescription = {
-      from: paddingBottom,
-      to: 0,
-    };
-    await Promise.all([
-      animation(
-        heightAnimation,
-        element,
-        PropertySetter("height", "px"),
-        config,
-        type
-      ),
-      animation(
-        topAnimation,
-        element,
-        PropertySetter("paddingTop", "px"),
-        config,
-        type
-      ),
-      animation(
-        bottomAnimation,
-        element,
-        PropertySetter("paddingBottom", "px"),
-        config,
-        type
-      ),
-    ]);
     resolve();
   });
 }
@@ -239,10 +123,4 @@ export const OpacitySetter: SetterFunction = (
   spring: Spring
 ) => {
   element.style.opacity = spring.currentValue.toString();
-};
-export const ScrollSetter: SetterFunction = (
-  element: HTMLElement,
-  spring: Spring
-) => {
-  element.scrollTop = spring.currentValue;
 };
