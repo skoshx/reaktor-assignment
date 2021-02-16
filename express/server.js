@@ -1,6 +1,7 @@
 /**
  * SkoshX (https://skoshx.com)
- * Express server to host reaktor-assignment on Heroku
+ * Express server to host reaktor-assignment on Heroku, and a simple CORS proxy
+ * to access an API that doesn't send CORS headers.
  */
 
 const express = require('express');
