@@ -26,9 +26,6 @@ class App extends Component<Props, State> {
   constructor() {
     super();
 
-    // Redirect to new page
-    window.location.href = 'http://skoshx.com:3000/';
-
     // Initialize state
     this.state = { tab: this._getCurrentTab() };
 
