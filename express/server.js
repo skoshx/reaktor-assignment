@@ -5,7 +5,7 @@
  */
 
 const express = require("express");
-const NodeCache = require("node-cache");
+const memjs = require("memjs");
 const _ = require("lodash");
 const parser = require("fast-xml-parser");
 const path = require("path");
@@ -13,7 +13,13 @@ const got = require("got");
 const port = process.env.PORT ?? 3000;
 const app = express();
 const releasePath = path.join(__dirname, "..", "dist", "web");
-const APICache = new NodeCache(); // In memory API cache
+
+const APICache = memjs.Client.create(process.env.MEMCACHIER_SERVERS, {
+  failover: true,
+  timeout: 1,
+  keepAlive: true
+});
+
 const MANUFACTURERS = [];
 
 const API_ENDPOINT_BASE = "https://bad-api-assignment.reaktor.com";
@@ -81,7 +87,9 @@ const updateAvailability = async (products, category) => {
     });
 
     // Update Cache
-    APICache.set(`/v2/products/${category}`, merged);
+    try {
+      await APICache.set(`/v2/products/${category}`, JSON.stringify(merged));
+    } catch (e) {}
   }
 };
 
@@ -109,9 +117,9 @@ app.get("/v2/products/:category", async (req, res) => {
     updateAvailability(products, category);
 
     // Check if cache available
-    const cached = APICache.get(`/v2/products/${category}`);
-    if (cached) {
-      res.json(cached);
+    const cached = await APICache.get(`/v2/products/${category}`);
+    if (cached.value) {
+      res.json(JSON.parse(cached.value.toString()));
     } else {
       res.json(products);
     }
