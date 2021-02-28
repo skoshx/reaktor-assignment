@@ -5,7 +5,7 @@
  */
 
 const express = require("express");
-const memjs = require("memjs");
+const NodeCache = require("node-cache");
 const _ = require("lodash");
 const parser = require("fast-xml-parser");
 const path = require("path");
@@ -14,11 +14,7 @@ const port = process.env.PORT ?? 3000;
 const app = express();
 const releasePath = path.join(__dirname, "..", "dist", "web");
 
-const APICache = memjs.Client.create(process.env.MEMCACHIER_SERVERS, {
-  failover: true,
-  timeout: 1,
-  keepAlive: true
-});
+const APICache = new NodeCache(); // In memory API cache
 
 const MANUFACTURERS = [];
 
@@ -87,9 +83,7 @@ const updateAvailability = async (products, category) => {
     });
 
     // Update Cache
-    try {
-      await APICache.set(`/v2/products/${category}`, JSON.stringify(merged));
-    } catch (e) {}
+    APICache.set(`/v2/products/${category}`, merged);
   }
 };
 
@@ -117,9 +111,9 @@ app.get("/v2/products/:category", async (req, res) => {
     updateAvailability(products, category);
 
     // Check if cache available
-    const cached = await APICache.get(`/v2/products/${category}`);
-    if (cached.value) {
-      res.json(JSON.parse(cached.value.toString()));
+    const cached = APICache.get(`/v2/products/${category}`);
+    if (cached) {
+      res.json(cached);
     } else {
       res.json(products);
     }
