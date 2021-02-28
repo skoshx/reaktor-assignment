@@ -7,6 +7,7 @@
 const express = require("express");
 const NodeCache = require("node-cache");
 const _ = require("lodash");
+const { middleware: cache } = require("apicache");
 const parser = require("fast-xml-parser");
 const path = require("path");
 const got = require("got");
@@ -15,6 +16,7 @@ const app = express();
 const releasePath = path.join(__dirname, "..", "dist", "web");
 
 const APICache = new NodeCache(); // In memory API cache
+let LASTCACHE = 0; // Used to keep track of time since last caching
 
 const MANUFACTURERS = [];
 
@@ -42,17 +44,20 @@ app.use((req, res, next) => {
 app.use(express.static(releasePath));
 
 const getResponse = async (endpoint, errorMode = false) => {
-  return (await errorMode)
+  return errorMode
     ? got(endpoint, { headers: { "x-force-error-mode": "all" } })
     : got(endpoint);
 };
 
 const updateAvailability = async (products, category) => {
+  // console.log(`Updating availability /${category}`);
   for (let i = 0; i < products.length; i++) {
     if (MANUFACTURERS.indexOf(products[i].manufacturer) === -1) {
       MANUFACTURERS.push(products[i].manufacturer); // Add new manufacturer
     }
   }
+
+  let merged = products; // Merged products and availability
 
   // Fetch availability for all manufacturers.
   const requests = MANUFACTURERS.map((manufacturer) => {
@@ -78,18 +83,22 @@ const updateAvailability = async (products, category) => {
     }
 
     // Merge products with availability
-    const merged = _.map(products, (item) => {
+    merged = _.map(merged, (item) => {
       return _.extend(item, _.find(availability.response, { id: item.id }));
     });
-
-    // Update Cache
-    APICache.set(`/v2/products/${category}`, merged);
   }
+  // Update Cache
+  console.log(`Caching /v2/products/${category}`);
+  APICache.set(`/v2/products/${category}`, merged);
 };
 
-// Initialize cache, retrieves the products their availability
-// from the API, and caches them.
-const initializeCache = async () => {
+// Update cache, retrieves the products their availability
+// from the API, and caches them. Updates cache only if cache
+// is more than 5 minutes old.
+const updateCache = async () => {
+  if ((new Date() - LASTCACHE) / 1000 < 5 * 60) return;
+  console.log('Updating cache…');
+  LASTCACHE = new Date();
   const categories = ["gloves", "facemasks", "beanies"];
   for (let i = 0; i < categories.length; i++) {
     const response = await getResponse(getProductsEndpoint(categories[i]));
@@ -99,7 +108,7 @@ const initializeCache = async () => {
   }
 };
 
-app.get("/v2/products/:category", async (req, res) => {
+app.get("/v2/products/:category", cache('5 minutes'), async (req, res) => {
   const category = req.params.category;
   try {
     const response = await getResponse(
@@ -108,7 +117,7 @@ app.get("/v2/products/:category", async (req, res) => {
     );
     const products = parseJSON(response.body);
     // Update availability cache
-    updateAvailability(products, category);
+    updateCache();
 
     // Check if cache available
     const cached = APICache.get(`/v2/products/${category}`);
@@ -130,5 +139,5 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`Express server running on *:${port}`);
   // Initialize cache
-  initializeCache();
+  updateCache();
 });

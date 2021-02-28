@@ -18,6 +18,7 @@
     "@babel/preset-env": "^7.9.0",
     "@types/express": "^4.17.11",
     "@types/node": "^14.10.1",
+    "apicache": "^1.6.2",
     "autoprefixer": "^8.6.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
