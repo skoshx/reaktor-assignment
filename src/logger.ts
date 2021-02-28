@@ -6,10 +6,12 @@
 import { DEBUG } from "./config";
 
 export enum LogLevels {
-  Verbose, Info,
-  Warning, Error,
+  Verbose,
+  Info,
+  Warning,
+  Error,
   None,
-};
+}
 
 export class Logger {
   private static LogLevel = DEBUG ? LogLevels.Verbose : LogLevels.Error;

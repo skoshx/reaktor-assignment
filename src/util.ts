@@ -3,9 +3,9 @@
  * Utility functions
  */
 
-import { getAvailabilityEndpoint, getProductsEndpoint } from "./config";
+import { getProductsEndpoint } from "./config";
 import { EventEmitter } from "./event";
-import ky from 'ky';
+import ky from "ky";
 import { Logger, LogLevels } from "./logger";
 import { ProgressEvents } from "./components/progress";
 
@@ -26,14 +26,18 @@ export interface Product {
   color: string[];
   price: number;
   manufacturer: string;
+  availability?: TAvailability;
 }
 
-export async function getProducts(category: string, errorMode?: boolean): Promise<Product[]> {
+export async function getProducts(
+  category: string,
+  errorMode?: boolean
+): Promise<Product[]> {
   const endpoint = getProductsEndpoint(category);
   const api = getApi(errorMode);
   try {
     EventEmitter.emit(ProgressEvents.Progress, 0.3);
-    const response = await api.get(endpoint).json() as Product[];
+    const response = (await api.get(endpoint).json()) as Product[];
     EventEmitter.emit(ProgressEvents.Finished);
     return response;
   } catch (e: any) {
@@ -52,31 +56,7 @@ export interface AvailabilityResponse {
   response: Availability[];
 }
 
-export type TAvailability = "instock" | "outofstock" | "lessthan10" | "notfound";
-
-export async function getAvailabilityById(manufacturer: string, id: string, errorMode?: boolean): Promise<TAvailability> {
-  const endpoint = getAvailabilityEndpoint(manufacturer);
-  const api = getApi(errorMode);
-  try {
-    EventEmitter.emit(ProgressEvents.Progress, 0.3);
-    const response: AvailabilityResponse = await api.get(endpoint).json();
-    EventEmitter.emit(ProgressEvents.Finished);
-    const results = response.response;
-    if (typeof results === "string") return "notfound"; // Handle error case
-    for (let i = 0; i < results.length; i++) {
-      if (results[i].id.toLowerCase() == id) {
-        const parser = new DOMParser(); // Parse response
-        const xml = parser.parseFromString(results[i].DATAPAYLOAD, "text/xml");
-        const availability = xml.getElementsByTagName("INSTOCKVALUE")[0].textContent.toLowerCase() as TAvailability;
-        return availability;
-      }
-    }
-  } catch (e) {
-    Logger.log(e, LogLevels.Error);
-    EventEmitter.emit(ProgressEvents.Finished);
-  }
-  return "notfound";
-}
+export type TAvailability = "instock" | "outofstock" | "lessthan10";
 
 export function getApi(errorMode?: boolean) {
   if (errorMode) {
@@ -84,11 +64,11 @@ export function getApi(errorMode?: boolean) {
       timeout: false,
       hooks: {
         beforeRequest: [
-          request => {
-            request.headers.set('x-force-error-mode', 'all');
-          }
-        ]
-      }
+          (request) => {
+            request.headers.set("x-force-error-mode", "all");
+          },
+        ],
+      },
     });
   } else {
     return ky.extend({ timeout: false });

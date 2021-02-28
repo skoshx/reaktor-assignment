@@ -26,7 +26,7 @@ export const SpringTypes = {
     mass: 1,
     stiffness: 200,
     damping: 100,
-  }
+  },
 };
 
 export interface AnimationDescription {

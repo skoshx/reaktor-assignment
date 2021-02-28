@@ -12,7 +12,7 @@ export enum ProgressEvents {
   Progress = "PROGRESS_EVENT_PROGRESS",
   AddProgress = "PROGRESS_EVENT_PROGRESS_ADD",
   Finished = "PROGRESS_EVENT_FINISHED",
-};
+}
 
 export const Progress = () => {
   const progressRef = useRef<HTMLDivElement>();
@@ -43,7 +43,7 @@ export const Progress = () => {
       PropertySetter("width", "%")
     );
     await fadeOut(progressRef.current);
-    progressRef.current.style.width = '0';
+    progressRef.current.style.width = "0";
     setProgress(0); // Reset progress
   });
 
@@ -56,7 +56,6 @@ export const Progress = () => {
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow={Math.round(progress * 100)}
-    >
-    </div>
+    ></div>
   );
 };

@@ -9,7 +9,7 @@ export const Header = () => {
   const logoStyle = {
     fontSize: "20px",
     color: "var(--theme-color)",
-    textAlign: 'center'
+    textAlign: "center",
   };
   return (
     <header>

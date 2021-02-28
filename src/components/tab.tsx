@@ -5,11 +5,7 @@
 
 import { h } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import {
-  animation,
-  SpringTypes,
-  PropertySetter
-} from "../animation";
+import { animation, SpringTypes, PropertySetter } from "../animation";
 import { capitalize } from "../util";
 
 export interface TabSwitcherProps {

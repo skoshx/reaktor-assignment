@@ -12,7 +12,6 @@ interface EventEmitterType {
   emit: (name: string, ...args: any[]) => void;
 }
 
-
 export const EventEmitter: EventEmitterType = {
   events: {},
   on: (name: string, listener: Function) => {

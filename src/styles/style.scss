@@ -55,14 +55,22 @@ header {
     padding: 2rem;
     width: 100%;
     border-radius: 1.5rem;
-    & > * { margin: 0; }
+    & > * {
+      margin: 0;
+    }
   }
 }
 @media (min-width: 550px) {
-  .main-container { padding: 0; }
-  .product-container .product { width: calc(50% - 1.5rem); }
+  .main-container {
+    padding: 0;
+  }
+  .product-container .product {
+    width: calc(50% - 1.5rem);
+  }
 }
 
 @media (min-width: 1000px) {
-  .product-container .product { width: calc(33% - 1rem); }
+  .product-container .product {
+    width: calc(33% - 1rem);
+  }
 }

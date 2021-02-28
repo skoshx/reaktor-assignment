@@ -32,7 +32,7 @@ class App extends Component<Props, State> {
     // Scroll listener to dynamically add products when user
     // has scrolled to the bottom.
     document.addEventListener('scroll', () => {
-      if (window.scrollY > document.body.scrollHeight * 0.9) {
+      if ((window.innerHeight + window.pageYOffset) >= document.body.scrollHeight * 0.9) {
         EventEmitter.emit("AddProducts");
       }
     }, { passive: true });

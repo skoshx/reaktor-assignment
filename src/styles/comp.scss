@@ -133,22 +133,23 @@ header {
 
 /* Product items */
 .product {
-  h2.name { color: var(--theme-color); }
-  h2.price { font-weight: 200; }
+  h2.name {
+    color: var(--theme-color);
+  }
+  h2.price {
+    font-weight: 200;
+  }
   .color-container {
     display: flex;
     margin-bottom: 1.5rem;
   }
 }
-/*
 
-<div className="product">
-        <h2 style="color: var(--theme-color);">{product.name}</h2>
-        <h6 class="h-small">{product.manufacturer}</h6>
-        <h2 style="font-weight: 200;">{product.price}€</h2>
-        <div className="color-container" style="display: flex; margin-bottom: 1.5rem;">
-          {colors}
-        </div>
-        <Availability manufacturer={product.manufacturer} id={product.id} />
-      </div>
-*/
+/* Color circles */
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  border: 2px solid #2c3e50;
+  margin-right: 0.2rem;
+}
